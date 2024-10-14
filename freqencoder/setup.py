@@ -34,15 +34,17 @@ elif os.name == "nt":
 setup(
     name='freqencoder', # package name, import this to use python API
     ext_modules=[
-        CUDAExtension(
+        # CUDAExtension(
+        CppExtension(
             name='_freqencoder', # extension name, import this to use CUDA API
             sources=[os.path.join(_src_path, 'src', f) for f in [
-                'freqencoder.cu',
+                # 'freqencoder.cu',
+                'freqencoder.cpp',
                 'bindings.cpp',
             ]],
             extra_compile_args={
                 'cxx': c_flags,
-                'nvcc': nvcc_flags,
+                # 'nvcc': nvcc_flags,
             }
         ),
     ],

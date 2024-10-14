@@ -32,9 +32,10 @@ elif os.name == "nt":
 
 _backend = load(name='_freqencoder',
                 extra_cflags=c_flags,
-                extra_cuda_cflags=nvcc_flags,
+                # extra_cuda_cflags=nvcc_flags,
                 sources=[os.path.join(_src_path, 'src', f) for f in [
-                    'freqencoder.cu',
+                    # 'freqencoder.cu',
+                    'freqencoder.cpp',
                     'bindings.cpp',
                 ]],
                 )
