@@ -45,7 +45,8 @@ setup(
             extra_compile_args={
                 'cxx': c_flags,
                 # 'nvcc': nvcc_flags,
-            }
+            },
+            verbose=True
         ),
     ],
     cmdclass={
