@@ -1,4 +1,5 @@
 import os
+import glob
 from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
@@ -31,17 +32,28 @@ elif os.name == "nt":
             raise RuntimeError("Could not locate a supported Microsoft Visual C++ installation")
         os.environ["PATH"] += ";" + cl_path
 
+
+# 手动指定的源文件列表
+manual_sources = [os.path.join(_src_path, 'src', f) for f in [
+    # 'freqencoder.cu',
+    'freqencoder.cpp',
+    'bindings.cpp',
+]]
+
+# 动态获取 src/lua467 目录下的所有 .cpp 和 .cu 文件
+lua467_sources = glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cpp')) + \
+                 glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cu'))
+
+# 合并手动指定的文件和 lua467 目录下的所有文件
+all_sources = manual_sources + lua467_sources
+
 setup(
     name='freqencoder', # package name, import this to use python API
     ext_modules=[
         # CUDAExtension(
         CppExtension(
             name='_freqencoder', # extension name, import this to use CUDA API
-            sources=[os.path.join(_src_path, 'src', f) for f in [
-                # 'freqencoder.cu',
-                'freqencoder.cpp',
-                'bindings.cpp',
-            ]],
+            sources=all_sources,
             extra_compile_args={
                 'cxx': c_flags,
                 # 'nvcc': nvcc_flags,
