@@ -42,6 +42,7 @@ manual_sources = [os.path.join(_src_path, 'src', f) for f in [
 
 # 动态获取 src/lua467 目录下的所有 .cpp 和 .cu 文件
 lua467_sources = glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cpp')) + \
+                 glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.c')) + \
                  glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cu'))
 
 # 合并手动指定的文件和 lua467 目录下的所有文件
