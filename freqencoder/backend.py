@@ -1,5 +1,6 @@
 import os
 import glob
+import tempfile
 from torch.utils.cpp_extension import load
 
 _src_path = os.path.dirname(os.path.abspath(__file__))
@@ -46,11 +47,14 @@ lua467_sources = glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cpp')) + 
 # 合并手动指定的文件和 lua467 目录下的所有文件
 all_sources = manual_sources + lua467_sources
 
-_backend = load(name='_freqencoder',
-                extra_cflags=c_flags,
-                # extra_cuda_cflags=nvcc_flags,
-                sources=all_sources,
-                verbose=True
-                )
+# 使用临时目录来确保每次都进行重新编译
+with tempfile.TemporaryDirectory() as build_dir:
+    _backend = load(name='_freqencoder',
+                    extra_cflags=c_flags,
+                    # extra_cuda_cflags=nvcc_flags,
+                    sources=all_sources,
+                    build_directory=build_dir,  # 使用临时编译目录确保每次都重新编译
+                    verbose=True
+                    )
 
 __all__ = ['_backend']
