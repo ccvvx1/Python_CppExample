@@ -60,9 +60,9 @@ class FreqEncoder(nn.Module):
         self.degree = degree
         self.output_dim = input_dim + input_dim * 2 * degree
 
-    def print_info(self):
-        _backend.freq_print()
-        print("wa wa wa")
+    def print_info(self, input_content):
+        return _backend.freq_print(input_content)
+        # print("wa wa wa")
 
     def __repr__(self):
         return f"FreqEncoder: input_dim={self.input_dim} degree={self.degree} output_dim={self.output_dim}"

@@ -93,8 +93,9 @@
 //     grad_inputs[0] = result;
 // }
 
-void freq_print() {
+std::string freq_print(const std::string& input) {
   std::cout << "all right freq_print";
+  return "The input content : " + input;
 }
 
 
