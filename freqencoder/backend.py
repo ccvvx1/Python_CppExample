@@ -12,9 +12,11 @@ nvcc_flags = [
 ]
 
 if os.name == "posix":
-    c_flags = ['-O3', '-std=c++14']
+    # 适用于 Linux 的 c_flags
+    c_flags = ['-O3', '-std=c++14', '-Wl,-E', '-ldl', '-DLUA_COMPAT_5_3', '-DLUA_USE_LINUX']
 elif os.name == "nt":
-    c_flags = ['/O2', '/std:c++17']
+    # Windows 不需要 -Wl, -E, 和 -ldl
+    c_flags = ['/O2', '/std:c++17', '-DLUA_COMPAT_5_3', '-DLUA_USE_WINDOWS']  # 修改为 -DLUA_USE_WINDOWS
 
     # find cl.exe
     def find_cl_path():
@@ -47,14 +49,25 @@ lua467_sources = glob.glob(os.path.join(_src_path, 'src', 'lua547', '*.cpp')) + 
 # 合并手动指定的文件和 lua467 目录下的所有文件
 all_sources = manual_sources + lua467_sources
 
+# with tempfile.TemporaryDirectory() as build_dir:
+_backend = load(name='_freqencoder_v6',
+                extra_cflags=c_flags,
+                # extra_cuda_cflags=nvcc_flags,
+                build_directory="/content/tmp2/",
+                sources=all_sources,
+                # build_directory=build_dir,  # 使用临时编译目录确保每次都重新编译
+                verbose=True
+                )
+
 # 使用临时目录来确保每次都进行重新编译
-with tempfile.TemporaryDirectory() as build_dir:
-    _backend = load(name='_freqencoder',
-                    extra_cflags=c_flags,
-                    # extra_cuda_cflags=nvcc_flags,
-                    sources=all_sources,
-                    build_directory=build_dir,  # 使用临时编译目录确保每次都重新编译
-                    verbose=True
-                    )
+# with tempfile.TemporaryDirectory() as build_dir:
+#     _backend = load(name='_freqencoder',
+#                     extra_cflags=c_flags,
+#                     # extra_cuda_cflags=nvcc_flags,
+#                     # build_directory="/content/tmp1/",
+#                     sources=all_sources,
+#                     build_directory=build_dir,  # 使用临时编译目录确保每次都重新编译
+#                     verbose=True
+#                     )
 
 __all__ = ['_backend']
